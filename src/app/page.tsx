@@ -104,37 +104,38 @@ export default function Playground() {
   };
 
   return (
-    <div className="space-y-10 relative">
+    <div className="space-y-6 sm:space-y-10 relative">
       {/* Hero Section */}
-      <section className="space-y-4 text-center max-w-2xl mx-auto py-6">
+      <section className="space-y-3 text-center max-w-2xl mx-auto py-3 sm:py-6">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-teal-400 text-xs font-mono shadow-inner">
-          <Sparkles className="h-3.5 w-3.5" />
-          Real-time Graph Reconciliation Engine
+          <Sparkles className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+          <span className="hidden sm:inline">Real-time Graph Reconciliation Engine</span>
+          <span className="sm:hidden">Reconciliation Engine</span>
         </div>
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-neutral-100 via-teal-100 to-indigo-100 bg-clip-text text-transparent">
-          Zamazon Identity playground
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-neutral-100 via-teal-100 to-indigo-100 bg-clip-text text-transparent leading-tight px-2">
+          Zamazon Identity Playground
         </h1>
-        <p className="text-xs sm:text-sm text-neutral-400 font-mono tracking-widest uppercase">
+        <p className="text-[10px] sm:text-xs text-neutral-400 font-mono tracking-widest uppercase px-4">
           Consolidate guest checkouts and account mappings instantly.
         </p>
       </section>
 
       {/* Preset Scenarios Panel */}
-      <section className="glass-card rounded-2xl p-6 space-y-4 relative overflow-hidden">
+      <section className="glass-card rounded-2xl p-4 sm:p-6 space-y-4 relative overflow-hidden">
         <div className="absolute right-0 top-0 h-40 w-40 bg-teal-500/5 rounded-full filter blur-2xl pointer-events-none"></div>
         <h2 className="text-xs font-mono font-bold tracking-widest text-neutral-400 uppercase flex items-center gap-2 border-b border-white/5 pb-3">
           <Play className="h-3.5 w-3.5 text-teal-400" />
           Reconciliation Presets
         </h2>
-        
-        <div className="grid md:grid-cols-3 gap-4">
+        {/* Horizontal scroll on mobile, 3-col grid on md+ */}
+        <div className="flex gap-3 overflow-x-auto pb-2 md:pb-0 md:grid md:grid-cols-3 md:gap-4 snap-x snap-mandatory scrollbar-thin">
           {scenarios.map((sc, i) => {
             const Icon = sc.icon;
             return (
               <button
                 key={i}
                 onClick={() => handleApplyPreset(sc)}
-                className="text-left p-4 rounded-xl bg-neutral-900/60 border border-white/5 hover:border-teal-500/30 hover:bg-neutral-900 transition-all duration-300 group flex flex-col justify-between h-full space-y-4 hover:-translate-y-0.5 shadow-md"
+                className="text-left p-3.5 sm:p-4 rounded-xl bg-neutral-900/60 border border-white/5 hover:border-teal-500/30 hover:bg-neutral-900 active:bg-neutral-900 transition-all duration-300 group flex flex-col justify-between space-y-3 sm:space-y-4 hover:-translate-y-0.5 shadow-md snap-start shrink-0 w-64 md:w-auto"
               >
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5">
@@ -164,7 +165,7 @@ export default function Playground() {
       </section>
 
       {/* Inputs / Outputs Section */}
-      <section className="grid md:grid-cols-5 gap-8 items-start">
+      <section className="grid grid-cols-1 md:grid-cols-5 gap-5 sm:gap-8 items-start">
         {/* Request Panel */}
         <div className="md:col-span-2 space-y-6">
           <div className="glass-card rounded-2xl p-6 space-y-5 relative">

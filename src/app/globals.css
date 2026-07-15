@@ -95,3 +95,53 @@ body {
   background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 24px 24px;
 }
+
+/* ── Mobile & Tablet Optimizations ─────────────────────────────── */
+
+/* Allow vertical scrolling even though LiquidEther canvas blocks pointer */
+html, body {
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Horizontal scroll container for mobile preset cards */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 3px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(20, 184, 166, 0.2);
+  border-radius: 99px;
+}
+
+/* Reduce glow radii on small screens */
+@media (max-width: 640px) {
+  .glow-bg {
+    width: 340px;
+    height: 220px;
+    filter: blur(50px);
+  }
+  .glow-bg-secondary {
+    width: 260px;
+    height: 260px;
+    filter: blur(50px);
+  }
+  /* Tighter glass-card padding on mobile */
+  .glass-card {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* Prevent input zoom on iOS (font-size < 16px triggers it) */
+@media (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
