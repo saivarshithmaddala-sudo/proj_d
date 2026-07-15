@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zamazon Identity Engine — Project Documentation & Specification</title>
+  <style>
+    /* System Font Stack & Global Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background-color: #f9fafb;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      border: 1px solid #e5e7eb;
+    }
+
+    /* Typography */
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #111827;
+      margin-bottom: 0.5rem;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-family: monospace;
+      font-size: 0.875rem;
+      color: #0d9488;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: #374151;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      color: #4b5563;
+    }
+
+    ul, ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+      color: #4b5563;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.85em;
+      background-color: #f3f4f6;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #db2777;
+    }
+
+    pre {
+      background-color: #1f2937;
+      color: #f3f4f6;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+      border: 1px solid #374151;
+    }
+
+    pre code {
+      background-color: transparent;
+      padding: 0;
+      color: #38bdf8;
+      font-size: 0.875rem;
+    }
+
+    hr {
+      margin: 2.5rem 0;
+      border: 0;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    /* Callout Card */
+    .callout {
+      background-color: #f0fdfa;
+      border-left: 4px solid #14b8a6;
+      padding: 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .callout p {
+      margin-bottom: 0;
+      color: #115e59;
+      font-size: 0.95rem;
+    }
+
+    /* Print Styles Optimization */
+    @media print {
+      body {
+        background-color: #ffffff;
+        padding: 0;
+        color: #000000;
+      }
+
+      .container {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+      }
+
+      h1, h2, h3 {
+        page-break-after: avoid;
+        color: #000000;
+      }
+
+      pre {
+        background-color: #f9fafb;
+        color: #000000;
+        border: 1px solid #d1d5db;
+        page-break-inside: avoid;
+      }
+
+      pre code {
+        color: #000000;
+      }
+
+      .callout {
+        background-color: #f9fafb;
+        border-left: 4px solid #000000;
+        page-break-inside: avoid;
+      }
+
+      .callout-title {
+        color: #000000;
+      }
+
+      .callout p {
+        color: #000000;
+      }
+
+      hr {
+        border-top: 1px dashed #d1d5db;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Zamazon Identity Engine</h1>
+      <div class="subtitle">Technical Documentation & Architecture Specification</div>
+    </header>
+
+    <section>
+      <h2>1. Executive Summary</h2>
+      <p>In modern e-commerce and full-stack environments, users frequently interact with platforms using fragmented or partial contact details—such as utilizing alternative email addresses, ordering as guests, or signing up with different phone numbers. This fragmentation results in disparate contact entries belonging to the same physical person.</p>
+      <p>The <strong>Zamazon Identity Engine</strong> is a real-time, transaction-safe identity reconciliation engine. Given a stream of `/api/identify` requests carrying an <code>email</code> and/or <code>phoneNumber</code>, it automatically maps and consolidates these details into unified, exactly **two-level deep identity clusters**: a single root <code>primary</code> contact, and multiple linked <code>secondary</code> contacts.</p>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>2. Architecture & Tech Stack</h2>
+      <ul>
+        <li><strong>Framework:</strong> Next.js 14 (App Router) for Serverless API route handling.</li>
+        <li><strong>Database:</strong> MongoDB Atlas (Cloud replica set with transaction support).</li>
+        <li><strong>ORM:</strong> Prisma v6 for type-safe database queries.</li>
+        <li><strong>Language:</strong> TypeScript (strict mode) for compile-time interface safety.</li>
+        <li><strong>Testing:</strong> Vitest for integration and edge-case execution.</li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>3. Schema Design</h2>
+      <p>The system maps contacts dynamically using a self-referencing relationship inside a single MongoDB collection. Each secondary contact holds a reference to its primary parent via <code>linkedId</code>.</p>
+      <pre><code>// prisma/schema.prisma
+
+enum LinkPrecedence {
+  primary
+  secondary
+}
+
+model Contact {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  phoneNumber    String?
+  email          String?
+  linkedId       String?        @db.ObjectId // Reference to the primary contact
+  linkedContact  Contact?       @relation("ContactLinks", fields: [linkedId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  secondaryLinks Contact[]      @relation("ContactLinks")
+  linkPrecedence LinkPrecedence @default(primary)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+
+  @@index([email])
+  @@index([phoneNumber])
+  @@index([linkedId])
+}</code></pre>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>4. Core Reconciliation Algorithm</h2>
+      <p>When an <code>/api/identify</code> request is triggered, the engine resolves the identity state via the following workflow:</p>
+      <ol>
+        <li><strong>Match Detection:</strong> Queries the database for existing records containing the given email or phone number.</li>
+        <li><strong>Root Pathing:</strong> Recursively walks the parent chain for all matching records to find the single root primary parent ID.</li>
+        <li><strong>Cluster Merging:</strong> If matching records span multiple distinct primary clusters, the oldest primary contact survives. All younger primary contacts are updated to secondary precedence and link directly to the oldest primary. Any children previously pointing to the younger primaries are cascade-repointed to the oldest primary.</li>
+        <li><strong>New Information Checks:</strong> If the request introduces a new email or phone number not yet represented in the resolved cluster, a new secondary contact is created.</li>
+        <li><strong>Response Formatting:</strong> The engine structures the output, listing the primary contact's details first, followed by secondary details in ascending chronological order.</li>
+      </ol>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>5. Concurrency Control</h2>
+      <p>To avoid race conditions during concurrent requests (e.g., when two identical requests for a new customer arrive at the exact same millisecond), the engine runs queries inside a database transaction.</p>
+      <div class="callout">
+        <div class="callout-title">Retry-On-Conflict Strategy</div>
+        <p>If MongoDB throws a transient <code>WriteConflict</code> error (which occurs when two concurrent transactions attempt to write to the same document range), the application catches the error, waits a random delay to prevent locks, and retries. On the second attempt, the match lookup succeeds, avoiding the creation of duplicate primary parents.</p>
+      </div>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>6. Test Coverage</h2>
+      <p>The integration test suite executes 10 unique scenarios validating functionality:</p>
+      <ul>
+        <li><strong>New Identity:</strong> Creates primary contact on first-ever request.</li>
+        <li><strong>Information Extension:</strong> Sharing only phone or only email creates a secondary contact.</li>
+        <li><strong>Cluster Merge:</strong> Combines separate identities under the oldest parent.</li>
+        <li><strong>Exact Duplicate:</strong> Short-circuits and ignores redundant inputs.</li>
+        <li><strong>Type Coercion:</strong> Converts numeric phone inputs into strings dynamically.</li>
+        <li><strong>Race Condition Check:</strong> Validates concurrent requests execution safety.</li>
+      </ul>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>7. How to Export to PDF</h2>
+      <p>You can print or save this document as a PDF in a few steps:</p>
+      <ol>
+        <li>Open this HTML file in any browser (Chrome, Safari, Edge, Firefox).</li>
+        <li>Press <strong>Ctrl + P</strong> (or <strong>Cmd + P</strong> on Mac) to open the print options.</li>
+        <li>Select <strong>Save as PDF</strong> as the printer destination.</li>
+        <li>Make sure <strong>Background graphics</strong> is enabled to preserve colors, and click <strong>Save</strong>.</li>
+      </ol>
+    </section>
+  </div>
+</body>
+</html>
